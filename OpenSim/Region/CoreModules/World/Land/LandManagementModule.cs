@@ -2452,7 +2452,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                 return;
             System.Threading.Timer Timer;
 
-            if (targetAvatar.GodController.UserLevel < 200)
+            if (targetAvatar.GodController.IsLevel(GodController.GodLevels.GodLike))
             {
                 ILandObject land = clientScene.LandChannel.GetLandObject(targetAvatar.AbsolutePosition.X, targetAvatar.AbsolutePosition.Y);
                 if (!clientScene.Permissions.CanEditParcelProperties(client.AgentId, land, GroupPowers.LandEjectAndFreeze, true))

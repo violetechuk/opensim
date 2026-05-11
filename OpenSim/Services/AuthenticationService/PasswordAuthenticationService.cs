@@ -35,6 +35,7 @@ using System.Reflection;
 using OpenSim.Data;
 using OpenSim.Framework;
 using OpenSim.Framework.Console;
+using OpenSim.Region.Framework.Scenes;
 
 namespace OpenSim.Services.AuthenticationService
 {
@@ -113,7 +114,7 @@ namespace OpenSim.Services.AuthenticationService
 
             m_log.DebugFormat("[PASS AUTH]: Attempting impersonation");
 
-            List<UserAccount> accounts = m_UserAccountService.GetUserAccountsWhere(UUID.Zero, "UserLevel >= 200");
+            List<UserAccount> accounts = m_UserAccountService.GetUserAccountsWhere(UUID.Zero, "UserLevel >= " + (int)GodController.GodLevels.GodLike);
             if (accounts == null || accounts.Count == 0)
             {
                 m_log.DebugFormat("[PASS AUTH]: No suitable gods found");

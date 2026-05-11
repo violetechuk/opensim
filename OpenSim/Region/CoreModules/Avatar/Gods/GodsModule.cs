@@ -192,19 +192,14 @@ namespace OpenSim.Region.CoreModules.Avatar.Gods
             if(!m_scene.Permissions.IsGod(godID))
                 return;
 
-            int godlevel = 200;
-            // update level so higher gods can kick lower ones
             ScenePresence god = m_scene.GetScenePresence(godID);
-            if(god != null && god.GodController.GodLevel > godlevel)
-                godlevel =  god.GodController.GodLevel;
-
             if(agentID == ALL_AGENTS)
             {
                 m_scene.ForEachRootScenePresence(delegate(ScenePresence p)
                 {
                     if (p.UUID != godID)
                     {
-                        if(godlevel > p.GodController.GodLevel)
+                        if(god.GodController.IsLevel((GodController.GodLevels)p.GodController.GodLevel))
                             doKickmodes(godID, p, kickflags, reason);
                         else if(m_dialogModule != null)
                             m_dialogModule.SendAlertToUser(p.UUID, "Kick from " + godID.ToString() + " ignored, kick reason: " + reason);
@@ -230,7 +225,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Gods
                 return;
             }
 
-            if (godlevel <= sp.GodController.GodLevel) // no god wars
+            if (!god.GodController.IsLevel((GodController.GodLevels)sp.GodController.GodLevel)) // no god wars
             {
                 if(m_dialogModule != null)
                     m_dialogModule.SendAlertToUser(sp.UUID, "Kick from " + godID.ToString() + " ignored, kick reason: " + reason);
@@ -290,8 +285,6 @@ namespace OpenSim.Region.CoreModules.Avatar.Gods
 
         public void GridKickUser(UUID agentID, string reason)
         {
-            int godlevel = 240; // grid god default
-
             ScenePresence sp = m_scene.GetScenePresence(agentID);
             if (sp == null || sp.IsChildAgent)
             {
@@ -312,12 +305,13 @@ namespace OpenSim.Region.CoreModules.Avatar.Gods
             if(sp.IsDeleted)
                 return;
 
-            if (godlevel <= sp.GodController.GodLevel) // no god wars
+            // IWS change - no need for this
+            /*if (godlevel <= sp.GodController.GodLevel) // no god wars
             {
                 if(m_dialogModule != null)
                     m_dialogModule.SendAlertToUser(sp.UUID, "GRID kick detected and ignored, kick reason: " + reason);
                 return;
-            }
+            }*/
 
             if (sp.IsNPC)
             {

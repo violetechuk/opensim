@@ -2410,7 +2410,7 @@ namespace OpenSim.Region.Framework.Scenes
                         m_lastChildAgentUpdateDrawDistance = DrawDistance;
                         m_lastRegionsDrawDistance = RegionViewDistance;
 
-                        m_lastChildAgentUpdateGodLevel = GodController.ViwerUIGodLevel;
+                        m_lastChildAgentUpdateGodLevel = GodController.ViewerUIGodLevel;
                         m_childUpdatesBusy = false; // allow them
 
                     }
@@ -4132,7 +4132,7 @@ namespace OpenSim.Region.Framework.Scenes
                     m_lastChildAgentUpdateDrawDistance = DrawDistance;
                     m_lastRegionsDrawDistance = RegionViewDistance;
 
-                    m_lastChildAgentUpdateGodLevel = GodController.ViwerUIGodLevel;
+                    m_lastChildAgentUpdateGodLevel = GodController.ViewerUIGodLevel;
                     m_childUpdatesBusy = false; // allow them
                 }
             });
@@ -4451,7 +4451,7 @@ namespace OpenSim.Region.Framework.Scenes
                 m_childUpdatesBusy = true;
                 m_lastChildAgentCheckPosition = pos;
                 m_lastChildAgentUpdatePosition = pos;
-                m_lastChildAgentUpdateGodLevel = GodController.ViwerUIGodLevel;
+                m_lastChildAgentUpdateGodLevel = GodController.ViewerUIGodLevel;
                 m_lastChildAgentUpdateDrawDistance = DrawDistance;
                 m_lastRegionsDrawDistance = RegionViewDistance;
                 // m_lastChildAgentUpdateCamPosition = CameraPosition;
@@ -4471,7 +4471,7 @@ namespace OpenSim.Region.Framework.Scenes
                 if(KnownRegionHandles.Count > minhandles)
                 {
                     bool doUpdate = false;
-                    if (m_lastChildAgentUpdateGodLevel != GodController.ViwerUIGodLevel)
+                    if (m_lastChildAgentUpdateGodLevel != GodController.ViewerUIGodLevel)
                         doUpdate = true;
 
                     if (Math.Abs(DrawDistance - m_lastChildAgentUpdateDrawDistance) > 32.0f)
@@ -4488,7 +4488,7 @@ namespace OpenSim.Region.Framework.Scenes
                     {
                         m_childUpdatesBusy = true;
                         m_lastChildAgentUpdatePosition = pos;
-                        m_lastChildAgentUpdateGodLevel = GodController.ViwerUIGodLevel;
+                        m_lastChildAgentUpdateGodLevel = GodController.ViewerUIGodLevel;
                         m_lastChildAgentUpdateDrawDistance = DrawDistance;
                         // m_lastChildAgentUpdateCamPosition = CameraPosition;
 

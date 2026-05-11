@@ -5321,7 +5321,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     return;
 
                 // agent must not be a god
-                if (presence.GodController.UserLevel >= 200)
+                if (presence.GodController.IsLevel(GodController.GodLevels.GodLike))
                     return;
 
                 // agent must be over the owners land

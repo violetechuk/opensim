@@ -61,6 +61,16 @@ namespace OpenSim.Region.Framework.Scenes
         protected int m_godlevel = 0;
         protected int m_lastLevelToViewer = 0;
 
+        // IWS Change - constants from viewers
+        public enum GodLevels : int
+        {
+            GodLike = 1, // basic object + access bypasses
+            CustomerService = 100, // most viewer options available
+            Liason = 150, // + auctions
+            Full = 200,
+            Maintenance = 250
+        }
+
         public GodController(Scene scene, ScenePresence sp, int userlevel)
         {
             m_scene = scene;
@@ -127,8 +137,8 @@ namespace OpenSim.Region.Framework.Scenes
                 m_godlevel = m_rightsGodLevel;
             }
 
-            m_scenePresence.IsGod = (m_godlevel >= 200);
-            m_scenePresence.IsViewerUIGod = (m_viewergodlevel >= 200);
+            m_scenePresence.IsGod = (m_godlevel >= (int)GodLevels.GodLike);
+            m_scenePresence.IsViewerUIGod = (m_viewergodlevel >= (int)GodLevels.GodLike);
         }
 
         // calculates god level at sp creation from local and grid user god rights
@@ -137,7 +147,7 @@ namespace OpenSim.Region.Framework.Scenes
         protected int CalcRightsGodLevel()
         {
             int level = 0;
-            if (m_allowGridGods && m_userLevel >= 200)
+            if (m_allowGridGods && m_userLevel >= (int)GodLevels.GodLike)
                 level = m_userLevel;
 
             if(m_forceGridGodsOnly || level >= (int)ImplicitGodLevels.RegionOwner)
@@ -157,7 +167,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         protected bool CanBeGod()
         {
-            return m_rightsGodLevel >= 200;
+            return m_rightsGodLevel >= (int)GodLevels.GodLike;
         }
 
         protected void UpdateGodLevels(bool viewerState)
@@ -195,8 +205,8 @@ namespace OpenSim.Region.Framework.Scenes
                     m_godlevel = 0;
                 }
             }
-            m_scenePresence.IsGod = (m_godlevel >= 200);
-            m_scenePresence.IsViewerUIGod = (m_viewergodlevel >= 200);
+            m_scenePresence.IsGod = (m_godlevel >= (int)GodLevels.GodLike);
+            m_scenePresence.IsViewerUIGod = (m_viewergodlevel >= (int)GodLevels.GodLike);
         }
 
         public void SyncViewerState()
@@ -226,7 +236,7 @@ namespace OpenSim.Region.Framework.Scenes
        public OSD State()
         {
             OSDMap godMap = new OSDMap(2);
-            bool m_viewerUiIsGod = m_viewergodlevel >= 200;
+            bool m_viewerUiIsGod = m_viewergodlevel >= (int)GodLevels.GodLike; // IWS change
             godMap.Add("ViewerUiIsGod", OSD.FromBoolean(m_viewerUiIsGod));
 
             return godMap;
@@ -236,13 +246,13 @@ namespace OpenSim.Region.Framework.Scenes
         {
             bool newstate = false;
             if(m_forceGodModeAlwaysOn)
-                newstate = m_viewergodlevel >= 200;
+                newstate = m_viewergodlevel >= (int)GodLevels.GodLike;
             if(state != null)
             {
                 OSDMap s = (OSDMap)state;
                 if (s.TryGetValue("ViewerUiIsGod", out OSD tmp))
                     newstate = tmp.AsBoolean();
-                m_lastLevelToViewer = newstate && m_viewergodlevel < 200 ? 200 : m_viewergodlevel;
+                m_lastLevelToViewer = newstate && m_viewergodlevel < (int)GodLevels.GodLike ? (int)GodLevels.GodLike : m_viewergodlevel;
             }
             UpdateGodLevels(newstate);
         }
@@ -263,7 +273,7 @@ namespace OpenSim.Region.Framework.Scenes
             set { m_userLevel = value; }
         }
 
-        public int ViwerUIGodLevel
+        public int ViewerUIGodLevel
         {
             get { return m_viewergodlevel; }
         }
@@ -271,6 +281,15 @@ namespace OpenSim.Region.Framework.Scenes
         public int GodLevel
         {
             get { return m_godlevel; }
+        }
+
+        // IWS change - is god equal or above level
+        public bool IsLevel(GodLevels level, bool allowNonViewer = false)
+        {
+            if(allowNonViewer)
+                return GodLevel >= (int)level;
+            else
+                return ViewerUIGodLevel >= (int)level;
         }
     }
 }

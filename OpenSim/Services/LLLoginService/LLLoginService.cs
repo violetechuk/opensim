@@ -44,6 +44,7 @@ using OpenSim.Services.Interfaces;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using FriendInfo = OpenSim.Services.Interfaces.FriendInfo;
 using OpenSim.Services.Connectors.Hypergrid;
+using OpenSim.Region.Framework.Scenes;
 
 namespace OpenSim.Services.LLLoginService
 {
@@ -297,7 +298,7 @@ namespace OpenSim.Services.LLLoginService
                     return response;
                 }
 
-                if (account.UserLevel < 200)
+                if (account.UserLevel < (int)GodController.GodLevels.GodLike)
                 {
                     m_log.InfoFormat("[LLOGIN SERVICE]: Set Level failed, reason: user level too low");
                     return response;
@@ -582,7 +583,7 @@ namespace OpenSim.Services.LLLoginService
                         destination.RegionName, destination.ExternalEndPoint, firstName, lastName);
                 }
 
-                if (account.UserLevel >= 200)
+                if (account.UserLevel >= (int)GodController.GodLevels.GodLike)
                     flags |= TeleportFlags.Godlike;
                 //
                 // Get the avatar
