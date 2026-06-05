@@ -61,7 +61,7 @@ namespace OpenSim.Region.Framework.Scenes
         protected int m_godlevel = 0;
         protected int m_lastLevelToViewer = 0;
 
-        // IWS Change - constants from viewers
+        // IWG Change - constants from viewers
         public enum GodLevels : int
         {
             GodLike = 1, // basic object + access bypasses
@@ -236,7 +236,7 @@ namespace OpenSim.Region.Framework.Scenes
        public OSD State()
         {
             OSDMap godMap = new OSDMap(2);
-            bool m_viewerUiIsGod = m_viewergodlevel >= (int)GodLevels.GodLike; // IWS change
+            bool m_viewerUiIsGod = m_viewergodlevel >= (int)GodLevels.GodLike; // IWG change
             godMap.Add("ViewerUiIsGod", OSD.FromBoolean(m_viewerUiIsGod));
 
             return godMap;
@@ -283,11 +283,11 @@ namespace OpenSim.Region.Framework.Scenes
             get { return m_godlevel; }
         }
 
-        // IWS change - is god equal or above level
+        // IWG change - is god equal or above level
         public bool IsLevel(GodLevels level, bool allowNonViewer = false)
         {
             if(allowNonViewer)
-                return GodLevel >= (int)level;
+                return UserLevel >= (int)level;
             else
                 return ViewerUIGodLevel >= (int)level;
         }

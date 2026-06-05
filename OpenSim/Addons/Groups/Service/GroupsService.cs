@@ -101,6 +101,9 @@ namespace OpenSim.Groups
             GroupPowers.HostEvent |
             GroupPowers.RemoveMember;
 
+        // IWG change: God agent list for users who can modify all groups
+        public static List<UUID> m_godAgents = new List<UUID>();
+
         #region Daily Cleanup
 
         private Timer m_CleanupTimer;
@@ -1091,6 +1094,12 @@ namespace OpenSim.Groups
 
         private bool HasPower(string agentID, UUID groupID, GroupPowers power)
         {
+            //
+            // IWG change: God agents have all powers in all groups
+            //
+            if (m_godAgents.Contains(new UUID(agentID)))
+                return true;
+            
             RoleMembershipData[] rmembership = m_Database.RetrieveMemberRoles(groupID, agentID);
             if (rmembership is null || rmembership.Length == 0)
                 return false;

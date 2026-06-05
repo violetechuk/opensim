@@ -234,6 +234,37 @@ namespace OpenSim.Groups
 
             client.OnAgentDataUpdateRequest += OnAgentDataUpdateRequest;
             //client.OnRequestAvatarProperties += OnRequestAvatarProperties;
+
+            // IWG change: Check if god and add to list
+            Scene scene = (Scene)client.Scene;
+            ScenePresence avatar = null;
+            if(!scene.TryGetScenePresence(client.AgentId, out avatar) || avatar is null)
+            {
+                m_log.WarnFormat("[Groups]: Could not find avatar for client {0} to check god level", client.Name);
+                return;
+            }
+
+            if (m_debugEnabled)
+                m_log.DebugFormat("[Groups]: Checking god level for client {0} ({1})", client.Name, avatar.GodController.UserLevel);
+
+            if (avatar.GodController.IsLevel(GodController.GodLevels.GodLike, true))
+            {
+                if (m_debugEnabled) m_log.DebugFormat("[Groups]: {0} is god and can override permissions", avatar.Name);
+
+                if(!GroupsService.m_godAgents.Contains(client.AgentId))
+                {
+                    GroupsService.m_godAgents.Add(client.AgentId);
+                }
+            }
+            else
+            {
+                if (m_debugEnabled) m_log.DebugFormat("[Groups]: {0} is not a god", avatar.Name);
+
+                if(GroupsService.m_godAgents.Contains(client.AgentId))
+                {
+                    GroupsService.m_godAgents.Remove(client.AgentId);
+                }
+            }
         }
 
 

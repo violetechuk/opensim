@@ -305,13 +305,13 @@ namespace OpenSim.Region.CoreModules.Avatar.Gods
             if(sp.IsDeleted)
                 return;
 
-            // IWS change - no need for this
-            /*if (godlevel <= sp.GodController.GodLevel) // no god wars
+            // IWG change
+            if (sp.GodController.IsLevel(GodController.GodLevels.GodLike, true)) // no god wars
             {
                 if(m_dialogModule != null)
                     m_dialogModule.SendAlertToUser(sp.UUID, "GRID kick detected and ignored, kick reason: " + reason);
                 return;
-            }*/
+            }
 
             if (sp.IsNPC)
             {
