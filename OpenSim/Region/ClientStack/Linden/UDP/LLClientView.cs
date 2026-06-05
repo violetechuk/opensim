@@ -6423,6 +6423,11 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             einfopack.Data.CovenantTimestamp = (uint)m_scene.RegionInfo.RegionSettings.CovenantChangedDateTime;
             einfopack.Data.EstateOwnerID = m_scene.RegionInfo.EstateSettings.EstateOwner;
             einfopack.Data.EstateName = Utils.StringToBytes(m_scene.RegionInfo.EstateSettings.EstateName);
+
+            // IWG change: Estate owner should be null if estate is mainland
+            if(m_scene.RegionInfo.EstateSettings.EstateID == 1)
+                einfopack.Data.EstateOwnerID = UUID.Zero;
+            
             OutPacket(einfopack, ThrottleOutPacketType.Task);
         }
 

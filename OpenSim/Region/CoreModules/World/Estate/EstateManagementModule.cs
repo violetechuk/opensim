@@ -504,6 +504,10 @@ namespace OpenSim.Region.CoreModules.World.Estate
             UUID estateOwner;
             estateOwner = Scene.RegionInfo.EstateSettings.EstateOwner;
 
+            // IWG change: mainland estate owner is null for client
+            if(Scene.RegionInfo.EstateSettings.EstateID == 1)
+                estateOwner = UUID.Zero;
+
             remote_client.SendDetailedEstateData(invoice,
                     Scene.RegionInfo.EstateSettings.EstateName,
                     Scene.RegionInfo.EstateSettings.EstateID,
